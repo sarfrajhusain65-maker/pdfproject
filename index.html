@@ -1,0 +1,109 @@
+document.querySelectorAll(".tool-card").forEach(setupToolCard);
+
+function formatBytes(bytes) {
+  bytes = Number(bytes);
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+function setupToolCard(card) {
+  const endpoint = card.dataset.endpoint;
+  const outName = card.dataset.outname;
+  const dropzone = card.querySelector(".dropzone");
+  const input = card.querySelector("input[type=file]");
+  const dzText = card.querySelector(".dz-text");
+  const statusEl = card.querySelector(".status");
+  const btn = card.querySelector(".convert-btn");
+  const qualitySelect = card.querySelector(".quality-select");
+  const targetKbInput = card.querySelector(".target-kb-input");
+
+  let selectedFile = null;
+
+  function setFile(file) {
+    selectedFile = file;
+    dzText.textContent = file ? `चुनी गई: ${file.name}` : "फ़ाइल चुनें या यहाँ drag करें";
+    btn.disabled = !file;
+    setStatus("", "");
+  }
+
+  function setStatus(msg, type) {
+    statusEl.textContent = msg;
+    statusEl.className = "status" + (type ? " " + type : "");
+  }
+
+  input.addEventListener("change", (e) => setFile(e.target.files[0] || null));
+
+  ["dragover", "dragenter"].forEach((evt) =>
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    })
+  );
+  ["dragleave", "drop"].forEach((evt) =>
+    dropzone.addEventListener(evt, (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+    })
+  );
+  dropzone.addEventListener("drop", (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) setFile(file);
+  });
+
+  btn.addEventListener("click", async () => {
+    if (!selectedFile) return;
+    btn.disabled = true;
+    setStatus("Convert हो रहा है... कृपया प्रतीक्षा करें", "loading");
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    if (qualitySelect) formData.append("quality", qualitySelect.value);
+    if (targetKbInput && targetKbInput.value) {
+      formData.append("target_kb", targetKbInput.value);
+    }
+
+    try {
+      const res = await fetch(endpoint, { method: "POST", body: formData });
+
+      if (!res.ok) {
+        let msg = "Conversion असफल हुआ।";
+        try {
+          const data = await res.json();
+          if (data.error) msg = data.error;
+        } catch (_) {}
+        setStatus(msg, "error");
+        btn.disabled = false;
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = outName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      const origSize = res.headers.get("X-Original-Size");
+      const compSize = res.headers.get("X-Compressed-Size");
+      const savedPct = res.headers.get("X-Saved-Percent");
+      const targetReached = res.headers.get("X-Target-Reached");
+      if (origSize && compSize) {
+        let msg = `✅ ${formatBytes(origSize)} → ${formatBytes(compSize)} (${savedPct}% कम)। Download शुरू हो गया है।`;
+        if (targetReached === "false") {
+          msg += " (बताई गई target size तक नहीं पहुंच पाए, सबसे छोटा possible size दिया गया है)";
+        }
+        setStatus(msg, "success");
+      } else {
+        setStatus("✅ Convert हो गया, download शुरू हो गया है।", "success");
+      }
+    } catch (err) {
+      setStatus("Network error — server से connect नहीं हो पाया।", "error");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
