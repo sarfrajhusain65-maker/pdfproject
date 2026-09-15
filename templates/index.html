@@ -1,1 +1,123 @@
+{% extends "base.html" %}
+{% import "_tool_card.html" as cards %}
+
+{% block title %}FileTools — PDF to Word, Word to PDF, PDF Compress & OCR Online Free{% endblock %}
+{% block meta_description %}मुफ़्त ऑनलाइन tools: PDF to Word, Word to PDF, PDF size compress (100KB/200KB/500KB), Image to Word, Image to Excel — बिना software install किए।{% endblock %}
+{% block canonical %}{{ site_url }}/{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero-container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span> 100% सुरक्षित और तेज़ फ़ाइल कन्वर्टर
+      </div>
+      <h1>अपनी Files को सेकंडों में <span class="gradient-text">Convert</span> करें</h1>
+      <p>PDF ↔ Word, PDF Compress, Image से Word/Excel — सब कुछ मुफ़्त, सुरक्षित और बिना किसी सॉफ़्टवेयर इंस्टॉलेशन के।</p>
+      
+      <div class="hero-cta-group">
+        <a href="#tools" class="hero-btn primary-btn">टूल्स आज़माएं</a>
+        <a href="#how" class="hero-btn secondary-btn">कैसे काम करता है</a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <strong>⚡ शून्य इंतज़ार</strong>
+          <span>तेज़ प्रोसेसिंग</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <strong>🔒 सुरक्षित</strong>
+          <span>ऑटो-डिलीट फ़ाइलें</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <strong>🆓 मुफ़्त</strong>
+          <span>कोई रजिस्ट्रेशन नहीं</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-graphic-wrapper">
+      <img src="/static/images/hero-banner.png" onerror="this.style.display='none'" alt="FileTools Graphics" class="hero-graphic" />
+    </div>
+  </div>
+</section>
+
+<section class="tools" id="tools">
+  <div class="container">
+    <div class="section-header">
+      <h2>पॉपुलर कन्वर्शन टूल्स</h2>
+      <p>अपनी पसंद का टूल चुनें और एक क्लिक में शुरू करें</p>
+    </div>
+    <div class="tool-grid">
+      {% for slug, tool in tools.items() %}
+        {{ cards.tool_card(slug, tool) }}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="container">
+    <div class="section-header">
+      <h2>सिर्फ 3 आसान स्टेप्स</h2>
+      <p>किसी भी दस्तावेज़ को बिना किसी झंझट के कन्वर्ट करें</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-icon-bubble">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span class="step-number">1</span>
+        </div>
+        <h3>फ़ाइल चुनें</h3>
+        <p>अपनी PDF, Word या Image को ड्रैग करके या ब्राउज़ करके अपलोड करें।</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon-bubble">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span class="step-number">2</span>
+        </div>
+        <h3>Convert दबाएं</h3>
+        <p>क्वालिटी या साइज़ सेट करें और कन्वर्शन शुरू करें, जो सेकंडों में पूरा होता है।</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-icon-bubble">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span class="step-number">3</span>
+        </div>
+        <h3>डाउनलोड करें</h3>
+        <p>कन्वर्ट की गई तैयार फ़ाइल तुरंत अपने डिवाइस में सुरक्षित डाउनलोड करें।</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="popular-searches">
+  <div class="container">
+    <div class="section-header">
+      <h2>अक्सर खोजे जाने वाले साइज़</h2>
+    </div>
+    <div class="related-links">
+      <a href="/compress-pdf-to-100kb"><span class="tag-icon">⚡</span> Compress to 100KB</a>
+      <a href="/compress-pdf-to-200kb"><span class="tag-icon">⚡</span> Compress to 200KB</a>
+      <a href="/compress-pdf-to-500kb"><span class="tag-icon">⚡</span> Compress to 500KB</a>
+      <a href="/compress-pdf-to-1mb"><span class="tag-icon">⚡</span> Compress to 1MB</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
 
