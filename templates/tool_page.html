@@ -1,1 +1,47 @@
+{% extends "base.html" %}
+{% import "_tool_card.html" as cards %}
+
+{% block title %}{{ tool.title }}{% endblock %}
+{% block meta_description %}{{ tool.meta_description }}{% endblock %}
+{% block canonical %}{{ site_url }}/{{ slug }}{% endblock %}
+
+{% block content %}
+<section class="hero hero-small">
+  <div class="container">
+    <h1>{{ tool.h1 }}</h1>
+    <p>{{ tool.intro }}</p>
+  </div>
+</section>
+
+<section class="tools single-tool">
+  <div class="container tool-grid one-col">
+    {{ cards.tool_card(slug, tool, target_kb) }}
+  </div>
+</section>
+
+{% if tool.faq %}
+<section class="faq">
+  <div class="container">
+    <h2>अक्सर पूछे जाने वाले सवाल</h2>
+    {% for q, a in tool.faq %}
+    <details class="faq-item">
+      <summary>{{ q }}</summary>
+      <p>{{ a }}</p>
+    </details>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="related">
+  <div class="container">
+    <h2>बाकी tools भी आज़माएं</h2>
+    <div class="related-links">
+      {% for other_slug, other_tool in all_tools.items() if other_slug != slug %}
+      <a href="/{{ other_slug }}">{{ other_tool.h1 }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
 
